@@ -55,7 +55,9 @@ void setup()
 
 void loop()
 {
-  String value = readDevice(WIND_DIRECTION, 1, false);
+  String windDirection = readDevice(WIND_DIRECTION, 1, false);
+  String humidTemperature = readDevice(ATMOS_TH, 2, true);
+
   delay(3000);
 }
 
@@ -71,13 +73,22 @@ String readDevice(int slaveID, int bufferSize, bool dataAddIncrement) {
 
   // Validating Response
   if (getResultMsg(&modbus, result) == "Success") {
-    value = String(modbus.getResponseBuffer(0));
-    Serial.println("INFO | SUCCESS | Device " + String(slaveID) + " : " + value);
+    if (bufferSize == 1){
+        value = String(modbus.getResponseBuffer(0));
+        Serial.println("INFO | SUCCESS | Device " + String(slaveID) + " : " + value + " Reg address " + String(DataAdd));
+    } else{
+        String temperature = String(modbus.getResponseBuffer(0));
+        String humidity = String(modbus.getResponseBuffer(1));
+        value = temperature + "," + humidity;
+        Serial.println("INFO | SUCCESS | Device " + String(slaveID) + " : " + value + " Combined param");
+      }
+  
   }
   else {
     value = getResultMsg(&modbus, result);
-    Serial.println("ERROR | FAILED | Device " + String(slaveID) + " : " + value);
+    Serial.println("ERROR | FAILED | Device " + String(slaveID) + " : " + value + "R eg address " + String(DataAdd));
   }
+  delay(500);
   return value;
 }
 
