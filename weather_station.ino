@@ -62,6 +62,12 @@ void loop()
   delay(3000);
 }
 
+// Input slaveID : Address of the slave to read
+//       bufferSize : Number of registers to read
+//       bufferSlice : Which buffer to read from the bufferSlice 
+                        // if bufferSize is 1 the it should be 0 else
+                        // increment the buffer slice as required
+// TODO : decorate with a unint for loop to read buffer as required
 String readDevice(int slaveID, int bufferSize, int bufferSlice, String sensor) {
   uint8_t result;
   String value;
